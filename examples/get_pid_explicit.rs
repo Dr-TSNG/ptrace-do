@@ -39,7 +39,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt().init();
 
     let target_pid: pid_t = 7777;
-    let traced_process = TracedProcess::attach(RawProcess::new(target_pid))?;
+    let traced_process = TracedProcess::attach(RawProcess::new(target_pid), 0)?;
 
     tracing::info!("Successfully attached to the process");
 

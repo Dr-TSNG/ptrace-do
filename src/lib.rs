@@ -539,8 +539,17 @@ where
         }
     }
 
-    pub fn attach(process: T) -> TraceResult<Self> {
-        let result = unsafe { ptrace(PTRACE_ATTACH, process.pid(), 0, 0) };
+    pub fn attach(process: T, flags: i32) -> TraceResult<Self> {
+        let result = unsafe { ptrace(PTRACE_ATTACH, process.pid(), 0, flags) };
+        match result == -1 {
+            true => Err(TraceError::Ptrace(std::io::Error::last_os_error())),
+            false => Ok(Self { process }),
+        }
+    }
+
+    pub fn seize(process: T, flags: i32) -> TraceResult<Self> {
+        static PTRACE_SEIZE: u32 = 0x4206; // libc for Android does not have this
+        let result = unsafe { ptrace(PTRACE_SEIZE, process.pid(), 0, flags) };
         match result == -1 {
             true => Err(TraceError::Ptrace(std::io::Error::last_os_error())),
             false => Ok(Self { process }),

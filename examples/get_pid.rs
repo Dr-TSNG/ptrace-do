@@ -53,7 +53,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::thread::sleep(std::time::Duration::from_secs(2));
     tracing::info!("Spawned process and waited a little.");
 
-    let traced_process = TracedProcess::attach(process)?;
+    let traced_process = TracedProcess::attach(process, 0)?;
 
     tracing::info!("Successfully attached to the process");
 
